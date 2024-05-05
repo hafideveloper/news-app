@@ -2,6 +2,10 @@
 
 # dependencies
 node_modules/
+*.log
+package-lock.json
+npm-debug.log
+
 
 # Expo
 .expo/
@@ -33,3 +37,19 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Visual studio
+.vscode
+.vs
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local History for Visual Studio Code
+.history/
+
+# Test Reports
+/reports
