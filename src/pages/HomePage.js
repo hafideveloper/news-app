@@ -1,16 +1,19 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, FlatList, TextInput, StyleSheet } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { fetchNews } from '../../helpers/NewsApi';
 import Loading from '../components/Loading';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function HomePage() {
   const { data: news, isLoading, isError } = useQuery({
     queryKey: ['news'],
     queryFn: fetchNews,
   });
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleNewsDetail = (item) => {
   };
@@ -34,14 +37,32 @@ export default function HomePage() {
   );
 
   const sortedNews = news ? news.slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) : [];
+  
+  const filteredNews = sortedNews.filter(item => 
+    item && 
+    item.title && item.author && item.publishedAt &&
+    (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
 
   if (isLoading) return <Loading />;
   if (isError) return <Text>Error fetching news</Text>;
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.searchContainer}>
+        <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          placeholder="Search news..."
+        />
+      </View>
       <FlatList
-        data={sortedNews}
+        data={filteredNews}
         renderItem={renderNewsItem}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -87,6 +108,23 @@ const styles = StyleSheet.create({
   publishedAt: {
     fontSize: hp('1.6%'),
     color: '#aaa',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#888',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    color: '#333',
   },
 });
 
