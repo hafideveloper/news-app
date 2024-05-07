@@ -6,6 +6,8 @@ import { fetchNews } from '../../helpers/NewsApi';
 import Loading from '../components/Loading';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
+import Header from '../components/Header';
 
 export default function HomePage() {
   const { data: news, isLoading, isError } = useQuery({
@@ -14,9 +16,13 @@ export default function HomePage() {
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation();
 
-  const handleNewsDetail = (item) => {
-  };
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
+  const handleNewsDetail = (item) => {};
 
   const renderNewsItem = ({ item, index }) => (
     <TouchableOpacity onPress={() => handleNewsDetail(item)} style={styles.card}>
@@ -28,23 +34,27 @@ export default function HomePage() {
           <Text style={styles.publishedAt}>{formatDate(item.publishedAt)}</Text>
           <Text style={styles.author}>{item.author}</Text>
         </View>
-        <Image
-          source={{ uri: item.urlToImage || 'https://picsum.photos/150' }}
-          style={styles.image}
+        <Image 
+        source={{ uri: item.urlToImage || 'https://picsum.photos/150' }} 
+        style={styles.image} 
         />
       </View>
     </TouchableOpacity>
   );
 
   const sortedNews = news ? news.slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) : [];
-  
+
   const filteredNews = sortedNews.filter(item => 
-    item && 
-    item.title && item.author && item.publishedAt &&
-    (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  item &&
+  item.title &&
+  item.author &&
+  item.publishedAt &&
+  (
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+    formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase())
+  )
+);
 
 
   if (isLoading) return <Loading />;
@@ -52,6 +62,7 @@ export default function HomePage() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header />
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
         <TextInput
@@ -61,10 +72,10 @@ export default function HomePage() {
           placeholder="Search news..."
         />
       </View>
-      <FlatList
-        data={filteredNews}
-        renderItem={renderNewsItem}
-        keyExtractor={(item, index) => index.toString()}
+      <FlatList 
+      data={filteredNews} 
+      renderItem={renderNewsItem} 
+      keyExtractor={(item, index) => index.toString()} 
       />
     </SafeAreaView>
   );
@@ -87,7 +98,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: wp('45%'), 
+    width: wp('45%'),
     height: hp('15%'),
     borderRadius: 8,
   },
