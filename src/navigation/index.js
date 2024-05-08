@@ -6,6 +6,8 @@ import HomePage from '../pages/HomePage';
 import Favorites from '../pages/Favorites';
 import NewsDetail from '../pages/NewsDetail';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import NewsSource from '../pages/NewsSource';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,6 +50,8 @@ export default function Navigation() {
       >
         <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
         <Stack.Screen name="NewsDetail" component={NewsDetail} />
+        <Stack.Screen name="NewsSource" component={NewsSource} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

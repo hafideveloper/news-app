@@ -25,6 +25,7 @@ export default function NewsDetail({ route }) {
   };
 
   const handleGoToSource = () => {
+      navigation.navigate('NewsSource', { url: newsItem.url });
   };
 
   return (
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   headerContainer: {
-    marginTop: hp('5%'), 
+    marginTop: hp('1%'), 
   },
   header: {
     flexDirection: 'row',
