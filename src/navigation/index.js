@@ -7,7 +7,7 @@ import Favorites from '../pages/Favorites';
 import NewsDetail from '../pages/NewsDetail';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NewsSource from '../pages/NewsSource';
-
+import { StatusBar } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,25 +34,33 @@ const MainTabNavigator = () => {
       })}
     >
       <Tab.Screen name="News" component={HomePage} />
-      <Tab.Screen name="Favorites" component={Favorites} />
+      <Tab.Screen 
+      name="Favorites" 
+      component={Favorites} 
+      options={{
+        headerTitle: '', 
+      }} 
+      />
     </Tab.Navigator>
   );
 };
 
 export default function Navigation() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="HomeTabs"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
-        <Stack.Screen name="NewsDetail" component={NewsDetail} />
-        <Stack.Screen name="NewsSource" component={NewsSource} />
-
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar backgroundColor="#f8f8f8" barStyle="dark-content" style="auto" /> 
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="HomeTabs"
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
+          <Stack.Screen name="NewsDetail" component={NewsDetail} />
+          <Stack.Screen name="NewsSource" component={NewsSource} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }

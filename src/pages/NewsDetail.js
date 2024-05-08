@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, Share } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function NewsDetail({ route }) {
   const { newsItem } = route.params;
   const navigation = useNavigation();
   const [isFavorited, setIsFavorited] = useState(false);
 
-  function formatDate(isoDate) {
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const favorites = await AsyncStorage.getItem('favorites');
+        const parsedFavorites = favorites ? JSON.parse(favorites) : [];
+        setIsFavorited(parsedFavorites.some(item => item.url === newsItem.url));
+      } catch (error) {
+        console.error('There was an error loading the favourites:', error);
+      }
+    };
+
+    loadFavorites();
+  }, [newsItem.url]);
+
+  const formatDate = (isoDate) => {
     const date = new Date(isoDate);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
@@ -17,8 +32,22 @@ export default function NewsDetail({ route }) {
     return `${day}.${month}.${year}`;
   }
 
-  const handleFavoritePress = () => {
-    setIsFavorited(!isFavorited);
+  const handleFavoritePress = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      let newFavorites = favorites ? JSON.parse(favorites) : [];
+
+      if (isFavorited) {
+        newFavorites = newFavorites.filter(item => item.url !== newsItem.url);
+      } else {
+        newFavorites.push(newsItem);
+      }
+
+      await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+      setIsFavorited(!isFavorited);
+    } catch (error) {
+      console.error('The favourite operation failed:', error);
+    }
   };
 
   const handleSharePress = async () => {
@@ -32,7 +61,7 @@ export default function NewsDetail({ route }) {
   };
 
   const handleGoToSource = () => {
-      navigation.navigate('NewsSource', { url: newsItem.url });
+    navigation.navigate('NewsSource', { url: newsItem.url });
   };
 
   return (

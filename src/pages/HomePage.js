@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   image: {
     width: wp('30%'),
     height: hp('15%'),
-    borderRadius: 8,
+    borderRadius: wp('3%'),
     marginLeft: wp('1%'), 
   },
   textContainer: {
@@ -134,18 +134,19 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 10,
+    margin: wp('2%'), 
     borderWidth: 1,
     borderColor: '#888',
-    borderRadius: 20,
-    paddingHorizontal: 10,
+    borderRadius: wp('10%'), 
+    paddingHorizontal: wp('2%'), 
+    marginHorizontal: wp('4%'), 
   },
   searchIcon: {
-    marginRight: 10,
+    marginRight: wp('2%'),
   },
   searchInput: {
     flex: 1,
-    height: 40,
+    height: hp('5%'),
     color: '#333',
   },
 });
