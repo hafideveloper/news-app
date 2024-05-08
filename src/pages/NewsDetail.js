@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, Share } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -21,7 +21,14 @@ export default function NewsDetail({ route }) {
     setIsFavorited(!isFavorited);
   };
 
-  const handleSharePress = () => {
+  const handleSharePress = async () => {
+    try {
+      await Share.share({
+        message: newsItem.url,
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   const handleGoToSource = () => {
