@@ -13,17 +13,21 @@ const Tab = createBottomTabNavigator();
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator
+      initialRouteName="News"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+          let iconColor;
 
           if (route.name === 'News') {
             iconName = focused ? 'newspaper-o' : 'newspaper-o';
+            iconColor = color;
           } else if (route.name === 'Favorites') {
             iconName = focused ? 'star' : 'star-o';
+            iconColor = focused ? 'gold' : 'grey';
           }
 
-          return <Icon name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={size} color={iconColor} />;
         },
       })}
     >
@@ -42,11 +46,8 @@ export default function Navigation() {
           headerShown: false,
         }}
       >
+        <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
         <Stack.Screen name="NewsDetail" component={NewsDetail} />
-        <Stack.Screen
-          name="HomeTabs"
-          component={MainTabNavigator}
-        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -22,40 +22,42 @@ export default function HomePage() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const handleNewsDetail = (item) => {};
+  const handleNewsDetail = (item) => {
+    navigation.navigate('NewsDetail', { newsItem: item });
+  };
 
-  const renderNewsItem = ({ item, index }) => (
+  const renderNewsItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleNewsDetail(item)} style={styles.card}>
       <View style={styles.cardContent}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>
-            {item.title.length > 50 ? item.title.slice(0, 50) + '...' : item.title}
+            {item.title.length > 45 ? item.title.slice(0, 45) + '...' : item.title}
+          </Text>
+          <Text style={styles.description}>
+            {item.description && item.description.length > 50
+              ? item.description.slice(0, 50) + '...'
+              : item.description}
           </Text>
           <Text style={styles.publishedAt}>{formatDate(item.publishedAt)}</Text>
-          <Text style={styles.author}>{item.author}</Text>
+          <Text style={styles.sourceName}>{item.source.name}</Text>
         </View>
-        <Image 
-        source={{ uri: item.urlToImage || 'https://picsum.photos/150' }} 
-        style={styles.image} 
-        />
+        <Image source={{ uri: item.urlToImage || 'https://picsum.photos/150' }} style={styles.image} />
       </View>
     </TouchableOpacity>
   );
 
   const sortedNews = news ? news.slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) : [];
 
-  const filteredNews = sortedNews.filter(item => 
-  item &&
-  item.title &&
-  item.author &&
-  item.publishedAt &&
-  (
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredNews = sortedNews.filter(
+  (item) =>
+    item &&
+    item.title &&
+    item.source.name && 
+    item.publishedAt &&
+    (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.source.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase()))
 );
-
 
   if (isLoading) return <Loading />;
   if (isError) return <Text>Error fetching news</Text>;
@@ -88,37 +90,46 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    margin: 10,
-    padding: 10,
-    borderRadius: 10,
+    marginHorizontal: wp('4%'), 
+    marginVertical: hp('1%'), 
+    padding: wp('3%'), 
+    borderRadius: wp('5%'), 
     elevation: 3,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1, 
   },
   image: {
-    width: wp('45%'),
+    width: wp('30%'),
     height: hp('15%'),
     borderRadius: 8,
+    marginLeft: wp('1%'), 
   },
   textContainer: {
-    flex: 1,
-    marginRight: 10,
+    flex: 1, 
+    marginRight: wp('1%'), 
   },
   title: {
     fontSize: hp('2%'),
     fontWeight: 'bold',
-    marginBottom: hp('1%'),
+    flexWrap: 'wrap',
+    marginBottom: hp('0.5%') 
   },
-  author: {
+  description: {
+    fontSize: hp('1.8%'),
+    flexWrap: 'wrap', 
+    marginBottom: hp('0.5%') 
+  },
+  sourceName: {
     fontSize: hp('1.8%'),
     color: '#888',
-    marginBottom: hp('1%'),
   },
   publishedAt: {
     fontSize: hp('1.6%'),
     color: '#aaa',
+    marginBottom: hp('0.5%') 
   },
   searchContainer: {
     flexDirection: 'row',
@@ -141,10 +152,10 @@ const styles = StyleSheet.create({
 
 function formatDate(isoDate) {
   const options = {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
   };
 
   const date = new Date(isoDate);
