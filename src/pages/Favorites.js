@@ -19,7 +19,7 @@ export default function Favorites({ navigation }) {
     queryKey: ['news'],
     queryFn: fetchNews,
   });
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [favoriteNews, setFavoriteNews] = useState([]);
 
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
+    marginHorizontal: wp('0.4%'), 
     marginVertical: hp('1%'),
     padding: wp('3%'),
     borderRadius: wp('5%'),
@@ -179,6 +180,5 @@ const styles = StyleSheet.create({
     flex: 1,
     height: hp('5%'),
     color: '#333',
-    fontSize: hp('1.8%'),
   },
 });

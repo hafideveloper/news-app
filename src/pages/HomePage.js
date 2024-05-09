@@ -66,7 +66,7 @@ export default function HomePage() {
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.searchContainer}>
-        <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
+        <Icon name="search" size={hp('3%')} color="#888" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           onChangeText={setSearchQuery}

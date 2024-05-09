@@ -65,38 +65,40 @@ export default function NewsDetail({ route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Icon name="arrow-undo-sharp" size={wp('7%')} color="black" />
-          </TouchableOpacity>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSharePress} style={styles.button}>
-              <Icon name="share-social-sharp" size={wp('7%')} color="black" />
+    <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.headerContainer}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+              <Icon name="arrow-undo-sharp" size={wp('7%')} color="black" />
             </TouchableOpacity>
-            <View style={{ width: wp('3%') }} />
-            <TouchableOpacity onPress={handleFavoritePress} style={styles.button}>
-              <Icon name={isFavorited ? "star" : "star-outline"} size={wp('7%')} color={isFavorited ? "gold" : "black"} />
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={handleSharePress} style={styles.button}>
+                <Icon name="share-social-sharp" size={wp('7%')} color="black" />
+              </TouchableOpacity>
+              <View style={{ width: wp('3%') }} />
+              <TouchableOpacity onPress={handleFavoritePress} style={styles.button}>
+                <Icon name={isFavorited ? "star" : "star-outline"} size={wp('7%')} color={isFavorited ? "gold" : "black"} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: newsItem.urlToImage || 'https://picsum.photos/200' }} style={styles.image} />
-        <Text style={styles.publishedAt}>{formatDate(newsItem.publishedAt)}</Text>
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.title}>{newsItem.title}</Text>
-        <Text style={styles.description}>{newsItem.description}</Text>
-      </View>
-      <View style={styles.sourceInfo}>
-        <Text style={styles.sourceText}>{newsItem.author}</Text>
-      </View>
-      <TouchableOpacity onPress={handleGoToSource} style={styles.sourceButton}>
-        <Text style={styles.sourceButtonText}>Go to News Source</Text>
-      </TouchableOpacity>      
-    </SafeAreaView>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: newsItem.urlToImage || 'https://picsum.photos/200' }} style={styles.image} />
+          <Text style={styles.publishedAt}>{formatDate(newsItem.publishedAt)}</Text>
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.title}>{newsItem.title}</Text>
+          <Text style={styles.description}>{newsItem.description}</Text>
+        </View>
+        <View style={styles.sourceInfo}>
+          <Text style={styles.sourceText}>{newsItem.author}</Text>
+        </View>
+        <TouchableOpacity onPress={handleGoToSource} style={styles.sourceButton}>
+          <Text style={styles.sourceButtonText}>Go to News Source</Text>
+        </TouchableOpacity>      
+      </SafeAreaView>
+    </View>
   );
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,7 +8,6 @@ import Favorites from '../pages/Favorites';
 import NewsDetail from '../pages/NewsDetail';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NewsSource from '../pages/NewsSource';
-import { StatusBar } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -19,48 +19,53 @@ const MainTabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          let iconColor;
 
           if (route.name === 'News') {
-            iconName = focused ? 'newspaper-o' : 'newspaper-o';
-            iconColor = color;
+            iconName = 'newspaper-o';
+            color = focused ? '#007bff' : '#BBBBBB';
           } else if (route.name === 'Favorites') {
-            iconName = focused ? 'star' : 'star-o';
-            iconColor = focused ? 'gold' : 'grey';
+            iconName = focused ? 'star' : 'star-o'; 
+            color = focused ? 'gold' : '#BBBBBB';
           }
 
-          return <Icon name={iconName} size={size} color={iconColor} />;
+          return <Icon name={iconName} size={size} color={color} />;
         },
+        tabBarLabel: ({ focused, color }) => {
+          let label;
+
+          if (route.name === 'News') {
+            label = 'News';
+            color = focused ? '#007bff' : '#BBBBBB'; 
+          } else if (route.name === 'Favorites') {
+            label = 'Favorites';
+            color = focused ? 'gold' : '#BBBBBB';
+          }
+
+          return <Text style={{ color }}>{label}</Text>;
+        },
+        tabBarActiveTintColor: 'gold',
+        tabBarInactiveTintColor: '#888888',
       })}
     >
       <Tab.Screen name="News" component={HomePage} />
-      <Tab.Screen 
-      name="Favorites" 
-      component={Favorites} 
-      options={{
-        headerTitle: '', 
-      }} 
-      />
+      <Tab.Screen name="Favorites" component={Favorites} />
     </Tab.Navigator>
   );
 };
 
 export default function Navigation() {
   return (
-    <>
-      <StatusBar backgroundColor="#f8f8f8" barStyle="dark-content" style="auto" /> 
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="HomeTabs"
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
-          <Stack.Screen name="NewsDetail" component={NewsDetail} />
-          <Stack.Screen name="NewsSource" component={NewsSource} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="HomeTabs"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
+        <Stack.Screen name="NewsDetail" component={NewsDetail} />
+        <Stack.Screen name="NewsSource" component={NewsSource} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
