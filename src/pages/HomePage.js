@@ -7,7 +7,6 @@ import Loading from '../components/Loading';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import Header from '../components/Header';
 
 export default function HomePage() {
   const { data: news, isLoading, isError } = useQuery({
@@ -17,10 +16,6 @@ export default function HomePage() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
 
   const handleNewsDetail = (item) => {
     navigation.navigate('NewsDetail', { newsItem: item });
@@ -49,22 +44,21 @@ export default function HomePage() {
   const sortedNews = news ? news.slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) : [];
 
   const filteredNews = sortedNews.filter(
-  (item) =>
-    item &&
-    item.title &&
-    item.source.name && 
-    item.publishedAt &&
-    (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.source.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase()))
-);
+    (item) =>
+      item &&
+      item.title &&
+      item.source.name &&
+      item.publishedAt &&
+      (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.source.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   if (isLoading) return <Loading />;
   if (isError) return <Text>Error fetching news</Text>;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
       <View style={styles.searchContainer}>
         <Icon name="search" size={hp('3%')} color="#888" style={styles.searchIcon} />
         <TextInput
@@ -75,9 +69,9 @@ export default function HomePage() {
         />
       </View>
       <FlatList 
-      data={filteredNews} 
-      renderItem={renderNewsItem} 
-      keyExtractor={(item, index) => index.toString()} 
+        data={filteredNews} 
+        renderItem={renderNewsItem} 
+        keyExtractor={(item, index) => index.toString()} 
       />
     </SafeAreaView>
   );
