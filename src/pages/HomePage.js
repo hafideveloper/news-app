@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { fetchNews } from '../../helpers/NewsApi';
+import { fetchNews, getCategory } from '../../helpers/NewsApi'; 
 import Loading from '../components/Loading';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,10 +15,17 @@ export default function HomePage() {
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('general');
   const navigation = useNavigation();
+
+  const categories = ['General', 'Business', 'Entertainment', 'Health', 'Science', 'Sports', 'Technology'];
 
   const handleNewsDetail = (item) => {
     navigation.navigate('NewsDetail', { newsItem: item });
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category.toLowerCase());
   };
 
   const renderNewsItem = ({ item }) => (
@@ -51,7 +58,8 @@ export default function HomePage() {
       item.publishedAt &&
       (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.source.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase()))
+        formatDate(item.publishedAt).toLowerCase().includes(searchQuery.toLowerCase())) &&
+      (!selectedCategory || getCategory(item).toLowerCase() === selectedCategory)
   );
 
   if (isLoading) return <Loading />;
@@ -68,10 +76,38 @@ export default function HomePage() {
           placeholder="Search news..."
         />
       </View>
-      <FlatList 
-        data={filteredNews} 
-        renderItem={renderNewsItem} 
-        keyExtractor={(item, index) => index.toString()} 
+      <View style={styles.categoryContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryScrollView}
+        >
+          {categories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.categoryItem,
+                selectedCategory === category.toLowerCase() && styles.selectedCategoryItem,
+              ]}
+              onPress={() => handleCategorySelect(category)}
+            >
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === category.toLowerCase() && styles.selectedCategoryText,
+                ]}
+              >
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+      <FlatList
+        data={filteredNews}
+        renderItem={renderNewsItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.newsList}
       />
     </SafeAreaView>
   );
@@ -84,37 +120,37 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    marginHorizontal: wp('4%'), 
-    marginVertical: hp('1%'), 
-    padding: wp('3%'), 
-    borderRadius: wp('5%'), 
+    marginHorizontal: wp('2%'),
+    marginVertical: hp('1%'),
+    padding: wp('3%'),
+    borderRadius: wp('5%'),
     elevation: 3,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1, 
+    flex: 1,
   },
   image: {
     width: wp('30%'),
     height: hp('15%'),
     borderRadius: wp('3%'),
-    marginLeft: wp('1%'), 
+    marginLeft: wp('1%'),
   },
   textContainer: {
-    flex: 1, 
-    marginRight: wp('1%'), 
+    flex: 1,
+    marginRight: wp('1%'),
   },
   title: {
     fontSize: hp('2%'),
     fontWeight: 'bold',
     flexWrap: 'wrap',
-    marginBottom: hp('0.5%') 
+    marginBottom: hp('0.5%'),
   },
   description: {
     fontSize: hp('1.8%'),
-    flexWrap: 'wrap', 
-    marginBottom: hp('0.5%') 
+    flexWrap: 'wrap',
+    marginBottom: hp('0.5%'),
   },
   sourceName: {
     fontSize: hp('1.8%'),
@@ -123,17 +159,17 @@ const styles = StyleSheet.create({
   publishedAt: {
     fontSize: hp('1.6%'),
     color: '#aaa',
-    marginBottom: hp('0.5%') 
+    marginBottom: hp('0.5%'),
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: wp('2%'), 
+    margin: wp('2%'),
     borderWidth: 1,
     borderColor: '#888',
-    borderRadius: wp('10%'), 
-    paddingHorizontal: wp('2%'), 
-    marginHorizontal: wp('4%'), 
+    borderRadius: wp('10%'),
+    paddingHorizontal: wp('2%'),
+    marginHorizontal: wp('4%'),
   },
   searchIcon: {
     marginRight: wp('2%'),
@@ -142,6 +178,35 @@ const styles = StyleSheet.create({
     flex: 1,
     height: hp('5%'),
     color: '#333',
+  },
+  categoryContainer: {
+    marginHorizontal: wp('2%'), 
+  },
+  categoryScrollView: {
+    paddingVertical: hp('1%'),
+    paddingHorizontal: wp('1%'), 
+  },
+  categoryItem: {
+    paddingHorizontal: wp('3%'),
+    borderRadius: wp('5%'),
+    backgroundColor: '#e0e0e0',
+    marginHorizontal: wp('1%'),
+    height: hp('4%'),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedCategoryItem: {
+    backgroundColor: '#007bff',
+  },
+  categoryText: {
+    fontSize: hp('2%'),
+    color: '#000',
+  },
+  selectedCategoryText: {
+    color: '#fff',
+  },
+  newsList: {
+    paddingHorizontal: wp('2%'),
   },
 });
 
