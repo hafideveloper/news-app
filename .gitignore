@@ -53,5 +53,3 @@ yarn-error.*
 
 # Test Reports
 /reports
-
-ApiKey.js
