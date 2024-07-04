@@ -8,6 +8,7 @@ import Favorites from '../pages/Favorites';
 import NewsDetail from '../pages/NewsDetail';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NewsSource from '../pages/NewsSource';
+import SplashScreen from '../pages/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,7 +25,7 @@ const MainTabNavigator = () => {
             iconName = 'newspaper-o';
             color = focused ? '#007bff' : '#BBBBBB';
           } else if (route.name === 'Favorites') {
-            iconName = focused ? 'star' : 'star-o'; 
+            iconName = focused ? 'star' : 'star-o';
             color = focused ? 'gold' : '#BBBBBB';
           }
 
@@ -35,7 +36,7 @@ const MainTabNavigator = () => {
 
           if (route.name === 'News') {
             label = 'News';
-            color = focused ? '#007bff' : '#BBBBBB'; 
+            color = focused ? '#007bff' : '#BBBBBB';
           } else if (route.name === 'Favorites') {
             label = 'Favorites';
             color = focused ? 'gold' : '#BBBBBB';
@@ -57,7 +58,7 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomeTabs"
+        initialRouteName="SplashScreen"
         screenOptions={{
           headerShown: false,
         }}
@@ -65,6 +66,7 @@ export default function Navigation() {
         <Stack.Screen name="HomeTabs" component={MainTabNavigator} />
         <Stack.Screen name="NewsDetail" component={NewsDetail} />
         <Stack.Screen name="NewsSource" component={NewsSource} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
