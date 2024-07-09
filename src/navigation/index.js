@@ -48,8 +48,16 @@ const MainTabNavigator = () => {
         tabBarInactiveTintColor: '#888888',
       })}
     >
-      <Tab.Screen name="News" component={HomePage} />
-      <Tab.Screen name="Favorites" component={Favorites} />
+      <Tab.Screen
+        name="News"
+        component={HomePage}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Favorites"
+        component={Favorites}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 };

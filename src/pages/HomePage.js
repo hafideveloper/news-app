@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: wp('10%'),
     paddingHorizontal: wp('2%'),
     marginHorizontal: wp('4%'),
+    marginTop: hp('3%'),  
   },
   searchIcon: {
     marginRight: wp('2%'),

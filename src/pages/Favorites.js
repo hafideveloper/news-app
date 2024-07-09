@@ -5,7 +5,6 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaVie
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Header from '../components/Header';
 import Loading from '../components/Loading';
 
 
@@ -90,7 +89,6 @@ export default function Favorites({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
       <View style={styles.searchContainer}>
         <Icon name="search" size={hp('3%')} color="#888" style={styles.searchIcon} />
         <TextInput
@@ -119,6 +117,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: wp('4%'),
     paddingBottom: hp('2%'),
+    marginTop: hp('2%'),  
   },
   card: {
     backgroundColor: '#fff',
@@ -172,6 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: wp('10%'), 
     paddingHorizontal: wp('2%'), 
     marginHorizontal: wp('4%'), 
+    marginTop: hp('7%'),  
   },
   searchIcon: {
     marginRight: wp('2%'),
