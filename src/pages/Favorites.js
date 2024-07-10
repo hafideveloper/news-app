@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchNews } from '../../helpers/NewsApi';
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaView, FlatList } from 'react-native';
@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Loading from '../components/Loading';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Favorites({ navigation }) {
 
@@ -22,19 +22,25 @@ export default function Favorites({ navigation }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [favoriteNews, setFavoriteNews] = useState([]);
 
-  useEffect(() => {
-    const loadFavorites = async () => {
-      try {
-        const favorites = await AsyncStorage.getItem('favorites');
-        const parsedFavorites = favorites ? JSON.parse(favorites) : [];
-        setFavoriteNews(parsedFavorites);
-      } catch (error) {
-        console.error('There was an error loading the favourites:', error);
-      }
-    };
+  const loadFavorites = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      const parsedFavorites = favorites ? JSON.parse(favorites) : [];
+      setFavoriteNews(parsedFavorites);
+    } catch (error) {
+      console.error('There was an error loading the favorites:', error);
+    }
+  };
 
+  useEffect(() => {
     loadFavorites();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadFavorites();
+    }, [])
+  );
 
   const formatDate = (isoDate) => {
     const options = {
@@ -66,7 +72,6 @@ export default function Favorites({ navigation }) {
     </TouchableOpacity>
   );
 
-
   const filteredFavorites = favoriteNews.filter(
     (item) =>
       item &&
@@ -82,10 +87,8 @@ export default function Favorites({ navigation }) {
     navigation.navigate('NewsDetail', { newsItem: item });
   };
 
-
   if (isLoading) return <Loading />;
   if (isError) return <Text>Error fetching news</Text>;
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
     borderRadius: wp('10%'), 
     paddingHorizontal: wp('2%'), 
     marginHorizontal: wp('4%'), 
-    marginTop: hp('7%'),  
+    marginTop: hp('3%'),  
   },
   searchIcon: {
     marginRight: wp('2%'),
